@@ -1,6 +1,6 @@
 ## Hi there 👋
 
-I am a frontend developer. I don't make clones, I build originals.
+I am a frontend developer and a software engineer. I don't make clones, I build originals.
 
 
 # 💻 Tech Stack:
