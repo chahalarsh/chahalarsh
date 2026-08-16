@@ -1,15 +1,11 @@
-document.getElementById('work1').addEventListener('click', function () {
-  window.open("https://example.com", "_blank");
+
+const workBoxes = document.querySelectorAll('.work-box');
+
+workBoxes.forEach(workBox => {
+  workBox.addEventListener('mouseover', () => {
+    workBoxes.forEach(p => p.classList.remove('is-open'));
+    workBox.classList.add('is-open');
+  });
+
 });
 
-document.getElementById('work2').addEventListener('click', function () {
-  window.open("https://example.com", "_blank");
-});
-
-document.getElementById('work3').addEventListener('click', function () {
-  window.open("https://example.com", "_blank");
-});
-
-document.getElementById('logo').addEventListener('click', function () {
-  window.location.href = 'https://chahalarsh.github.io/chahalarsh';
-});
