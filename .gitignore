@@ -1,1 +1,24 @@
-/reference
+# Logs (Website)
+Website/**/logs
+Website/**/*.log
+Website/**/npm-debug.log*
+Website/**/yarn-debug.log*
+Website/**/yarn-error.log*
+Website/**/pnpm-debug.log*
+Website/**/lerna-debug.log*
+
+Website/**/node_modules
+Website/dist
+Website/dist-ssr
+Website/**/*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
