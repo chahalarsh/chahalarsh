@@ -1,6 +1,9 @@
 import './style.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+// Optional: swap RoomEnvironment for a real HDRI — see notes at the bottom.
+// import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 // ======================================================
 // CONFIG
@@ -8,7 +11,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const CONFIG = {
   containerSelector: '#laptop-canvas',
   sectionSelector: '.laptop-section',
-  modelPath: '/model2.glb',
+  modelPath: '/Untitled.glb',
   cameraNameFallback: /camera/i,
   scrollSmoothTime: 0.15,
 };
@@ -37,10 +40,8 @@ if (!section) {
 // ======================================================
 const scene = new THREE.Scene();
 
-// FIXED: Added position and lookAt to the fallback camera
-// so you aren't stuck inside the model looking at nothing.
 let camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
-camera.position.set(0, 1, 5); 
+camera.position.set(0, 1, 5);
 camera.lookAt(0, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({
@@ -52,30 +53,25 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 1.15;
+
+// Real shadows — this is most of what sells "realistic" vs. "flat CG".
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 container.appendChild(renderer.domElement);
 
-// OPTIONAL DEBUGGING: Uncomment these if you still see a black screen 
-// to prove the camera and renderer are working.
-// const axesHelper = new THREE.AxesHelper(5);
-// scene.add(axesHelper);
-// const gridHelper = new THREE.GridHelper(10, 10);
-// scene.add(gridHelper);
-
-
 // ======================================================
-// PLAYBACK STATE (FIX: Moved UP before Resize/Scroll)
+// PLAYBACK STATE
 // ======================================================
 let mixer = null;
-let actions = [];       // [{ action, clip }]
+let actions = [];
 let animationDuration = 0;
 let targetProgress = 0;
 let currentProgress = 0;
 
-
 // ======================================================
-// SCROLL PROGRESS CALCULATION (FIX: Moved UP before Resize)
+// SCROLL PROGRESS CALCULATION
 // ======================================================
 function updateScrollProgress() {
   if (!section) return;
@@ -124,30 +120,86 @@ if (window.ResizeObserver) {
   window.addEventListener('resize', resize);
 }
 
-// Listen to scroll events natively
 window.addEventListener('scroll', updateScrollProgress, { passive: true });
 
-// Initial calls
 resize();
 updateScrollProgress();
 
 // ======================================================
+// ENVIRONMENT (image-based lighting)
+// ======================================================
+// This model has 103 materials, several using KHR_materials_clearcoat
+// (the chair, likely the monitor bezels/desk hardware). Clearcoat and any
+// glossy/metallic surface needs *something* to reflect or it renders as
+// dead flat grey no matter how many lights you throw at it — direct lights
+// only create tiny specular highlights, not the soft reflected gradients
+// you see across a curved monitor or a leather chair in the reference
+// photo. RoomEnvironment is a procedural neutral room baked to an env map
+// at runtime — no external asset needed, and it's what gives PBR materials
+// their "it looks like a photo" quality for free.
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+pmremGenerator.dispose();
+
+// For a step up in realism, swap this block for a real photographed HDRI —
+// see the RGBELoader note at the bottom of this file.
+
+// ======================================================
 // LIGHTING
 // ======================================================
-const keyLight = new THREE.DirectionalLight(0xffffff, 4);
-keyLight.position.set(4, 6, 5);
+// The glTF does NOT contain an embedded light (no KHR_lights_punctual in
+// the file) or any emissive-baked materials, despite what earlier comments
+// in this file assumed. So the room needs real lights, not a bake to
+// "boost." This is a simple 3-point setup similar to how the reference
+// photo reads: one warm key light standing in for a window/room light,
+// one cool, dim fill from the opposite side so shadow-side surfaces don't
+// crush to black, and a subtle rim light to separate the chair/desk edges
+// from the wall behind them.
+
+// Soft ambient/hemisphere fill — keep this LOW. Its job is to lift the
+// absolute darkest shadows a touch, not to light the room; if this is
+// strong it flattens every shadow the key light is creating.
+const hemiLight = new THREE.HemisphereLight(0xbfd4ff, 0x3a2e22, 0.35);
+scene.add(hemiLight);
+
+// KEY LIGHT — the dominant light, warm (simulates a window / room lamp),
+// casts the primary shadow. Positioned upper-front so it rakes across the
+// desk the way the reference photo's key light does.
+const keyLight = new THREE.DirectionalLight(0xfff2df, 3.2);
+keyLight.position.set(3, 4.5, 3);
+keyLight.target.position.set(1.5, 0.8, -1.3); // aim roughly at desk center
+scene.add(keyLight.target);
+keyLight.castShadow = true;
+keyLight.shadow.mapSize.set(2048, 2048);
+keyLight.shadow.bias = -0.0003;
+keyLight.shadow.normalBias = 0.02;
+// Tight shadow frustum around the model's actual bounds (~5 x 2.5 x 4.7
+// units) — a frustum sized for a whole outdoor scene wastes shadow-map
+// resolution and gives you soft, blurry, unconvincing shadows.
+const shadowCam = keyLight.shadow.camera;
+shadowCam.left = -4;
+shadowCam.right = 4;
+shadowCam.top = 4;
+shadowCam.bottom = -4;
+shadowCam.near = 0.5;
+shadowCam.far = 15;
 scene.add(keyLight);
 
-const fillLight = new THREE.DirectionalLight(0xffffff, 1.5);
-fillLight.position.set(-4, 2, 3);
+// FILL LIGHT — cool, dim, opposite side, NO shadow (a second shadow-caster
+// creates ugly double-shadows). Just stops the far side of the desk/chair
+// from going pure black.
+const fillLight = new THREE.DirectionalLight(0xcfe0ff, 0.6);
+fillLight.position.set(-4, 2.5, -2);
 scene.add(fillLight);
 
-const rimLight = new THREE.DirectionalLight(0xffffff, 2);
-rimLight.position.set(0, 4, -5);
+// RIM / SEPARATION LIGHT — small, positioned behind/above the subject,
+// picks out the edge of the monitor and the top of the chair so they
+// don't merge into the wall tone behind them.
+const rimLight = new THREE.SpotLight(0xffffff, 4, 8, Math.PI / 5, 0.5, 1.5);
+rimLight.position.set(1.5, 3, -4);
+rimLight.target.position.set(1.5, 1.2, -1.3);
+scene.add(rimLight.target);
 scene.add(rimLight);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambientLight);
 
 // ======================================================
 // CAMERA RESOLUTION
@@ -188,6 +240,17 @@ loader.load(
     const model = gltf.scene;
     scene.add(model);
 
+    // Enable shadow casting/receiving on every mesh. Everything both casts
+    // and receives here — with a desk scene like this, the desk needs to
+    // receive the chair's shadow and vice versa, and the floor/back wall
+    // (if present in the model) needs to receive both.
+    model.traverse((obj) => {
+      if (obj.isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+
     // Camera
     const blenderCamera = resolveCamera(gltf, model);
     if (blenderCamera) {
@@ -211,7 +274,7 @@ loader.load(
     gltf.animations.forEach((clip) => {
       animationDuration = Math.max(animationDuration, clip.duration);
       const action = mixer.clipAction(clip);
-      
+
       action.play();
       action.paused = true;
       action.time = 0;
@@ -253,3 +316,26 @@ function animate() {
 }
 
 animate();
+
+// ======================================================
+// ALTERNATIVE: swap RoomEnvironment for a real HDRI
+// ======================================================
+// RoomEnvironment gets you 80% of the way there for free. For the closest
+// match to a photo-real render like your reference image, replace the
+// "ENVIRONMENT" block above with a real equirectangular HDRI:
+//
+//   import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+//
+//   new RGBELoader().load('/env/studio_small_09_1k.hdr', (hdrEquirect) => {
+//     const envMap = pmremGenerator.fromEquirectangular(hdrEquirect).texture;
+//     scene.environment = envMap;
+//     scene.background = null; // keep your own background/backdrop
+//     hdrEquirect.dispose();
+//     pmremGenerator.dispose();
+//   });
+//
+// Free, CC0 HDRIs that suit an office/interior scene: polyhaven.com/hdris
+// (search "studio" or "indoor" — grab the 1k or 2k version, no need for 4k
+// for a desk-sized model). This single swap is usually the highest-value
+// change you can make for realism, because it fixes reflections on every
+// clearcoat/metal/glossy material at once instead of one light at a time.
