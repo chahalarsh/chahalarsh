@@ -8,32 +8,14 @@
     <title>Arshdeep Singh Chahal</title>
 
 
-
-
-
-
-
-
-
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
     <script type="module" src="/src/script2.js"></script>
 
-
-
-
-
-
-
-
-        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
-
-
-
-
 
 
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
@@ -42,9 +24,7 @@
     <link rel="manifest" href="assets/favicon/site.webmanifest">
 
 
-
-
-
+    <link rel="stylesheet" href="src/style.css">
 
     <!-- 
 
@@ -75,22 +55,23 @@
 </head>
 
 <body>
-    <div id="app"></div>
+    <div id="office"></div>
+    <div id="office2"></div>
+    <div id="office3"></div>
 
-
-    <button id="fullscreen-btn">Go Full Screen</button>
-
-
-
-
-    <section class="laptop-section">
-        <div id="laptop-canvas"></div>
-    </section>
-
+    <div id="macImmersion">
+        <div id="macBorder" ></div>
+        <div id="macTopBar">
+            <div id="macNotch"></div>
+        </div>
+    </div>
 
 
 
     
+
+    
+
     <div id="body-element-container">
 
         <header>
@@ -167,9 +148,7 @@
 
 
                 <div class="stats" id="stat4">
-
-
-                    <h1>245+ Dsa Question solved</h1>
+                    <div id="lc-card" data-username="chahalarsh"></div>
                 </div>
 
                 <div class="stats" id="stat5">
@@ -188,9 +167,10 @@
                 <div class="stats" id="stat7">
 
                     <img id="stat7-myphoto" src="assets/photo.jpg">
-                    <h1 id="stat7-myname">Arshdeep singh</h1>
+                    <h1 id="stat7-myname">Arshdeep singh</h1> 
+
                     <p id="hero-paragraph">
-                        Second-year computer science student who learns by building — currently
+                        Third-year computer science student who learns by building — currently
                         poking around web apps, systems tools, Android, and whatever else looks interesting.
                     </p>
 
@@ -240,6 +220,7 @@
                     </div>
 
                 </div>
+
             </div>
 
         </div>
@@ -587,97 +568,79 @@
             <div id="work-container">
 
                 <div class="work-box is-open" id="work1">
-
-                        <h1 id="work-heading"> work 1</h1>
-                        <h2 id="work-sub-heading">Sub heading about work</h2>
-                        <p id="work-paragraph"> para about work</p>
-
+                    <div id="work-element-container">
+                        <h1 id="work-heading">PixelPull</h1>
+                        <h2 id="work-sub-heading">Android wallpaper automation</h2>
+                        <p id="work-paragraph">Built an Android utility with an AI-assisted IDE for automated wallpaper setup — 80% faster than general automation apps, with WorkManager scheduling and CI/CD-driven releases.</p>
+                        <a class="work-link" href="https://chahalarsh.github.io/PixelPull/" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>    
                 </div>
 
-                <div class="work-box" id="work2">
-
-                        <h1 id="work-heading"> work 2</h1>
-                        <h2 id="work-sub-heading">Sub heading about work</h2>
-                        <p id="work-paragraph"> para about work</p>
-
+                <div class="work-box" id="work2" >
+                    <div id="work-element-container">
+                        <h1 id="work-heading">Portfolio Website</h1>
+                        <p id="work-paragraph">Responsive portfolio site with clean UI, deployed on GitHub Pages plus a self-hosted subdomain for testing live infra changes independently.</p>
+                        <a class="work-link" href="https://github.com/chahalarsh/chahlarsh" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>  
                 </div>
 
                 <div class="work-box" id="work3">
-
-                        <h1 id="work-heading"> work 3</h1>
-                        <h2 id="work-sub-heading">Sub heading about work</h2>
-                        <p id="work-paragraph"> para about work</p>
-
+                    <div id="work-element-container">
+                        <h1 id="work-heading">Personal HomeLab</h1>
+                        <h2 id="work-sub-heading">Self-hosted cloud platform</h2>
+                        <p id="work-paragraph">Deployed CasaOS on a self-hosted VM for containerized services, replacing Google Photos/etc. with Immich, plus a Telegram bot via n8n for real-time alerts and diagnostics.</p>
+                        <a class="work-link" href="https://github.com/chahalarsh/homelab" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>  
                 </div>
 
-                <div class="work-box" id="work4">
-
-                        <h1 id="work-heading"> work 4</h1>
-                        <h2 id="work-sub-heading">Sub heading about work</h2>
-                        <p id="work-paragraph"> para about work</p>
-
-                </div>
+            
 
             </div>
 
         </div>
 
-        <h2>View More on <a href="#work" class="btn btn-primary">Github</a></h2>
+        <h2>Explore more of my work <a href="#Work-section" class="btn btn-primary">See Projects</a></h2>
 
 
+<footer>
+    <div id="footer-container">
 
-        <footer>
-            <div id="footer-container">
+        <div id="footer-head-container">
+            <h1>Arshdeep Singh Chahal</h1>
+            <p>Building practical tools, experiments, and systems that turn ideas into real-world projects.</p>
+            <a href="mailto:arsh@chahalarsh.in" class="btn btn-primary">Let's Connect ↗</a>
+        </div>
 
-                <div id="footer-head-container">
-                    <h1>Arshdeep Singh Chahal</h1>
+        <div id="footer-body-container">
 
-
-                </div>
-
-
-                <div id="footer-body-container">
-
-                    <div class="footer-body-element-container">
-                        
-                    
-                        <h2>Contact</h2>
-
-                       
-
-                    </div>
-
-                    <div class="footer-body-element-container" >
-
-                        <h2>Navigation</h2>
-
-                        <ul class="footer-list">
-                            <li><a  class="list-item" href="#hero-section">Start</a></li>
-                            <li><a  class="list-item" href="#stats-section">Start</a></li>
-                        </ul>
-
-                    
-                    </div>
-                    <div class="footer-body-element-container">
-                    
-                        <h2>Socials</h2>
-
-                       
-
-                    </div>
-                    
-
-                </div>
-
-
-                
-
-
-
+            <div class="footer-body-element-container">
+                <h2>Contact</h2>
+                <ul class="footer-list">
+                    <li><a class="list-item" href="mailto:arsh@chahalarsh.in">Email - arsh@chahalarsh.in</a></li>
+                </ul>
             </div>
 
-        </footer>
+            <div class="footer-body-element-container">
+                <h2>Navigation</h2>
+                <ul class="footer-list">
+                    <li><a class="list-item" href="#hero-section">Overview</a></li>
+                    <li><a class="list-item" href="#stats-section">Stats</a></li>
+                    <li><a class="list-item" href="#Work-section">Projects</a></li>
+                </ul>
+            </div>
 
+            <div class="footer-body-element-container">
+                <h2>Socials</h2>
+                <ul class="footer-list">
+                    <li><a class="list-item" href="https://github.com/chahalarsh" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                    <li><a class="list-item" href="https://linkedin.com/in/chahalarsh" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</footer>
 
         
 
