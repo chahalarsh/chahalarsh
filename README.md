@@ -1,6 +1,6 @@
 # Hi there 👋
 
-[Website](https://chahalarsh.github.io/chahalarsh/) | [Resume](arshdeepSinghChahal.pdf)
+[Portfolio](https://chahalarsh.github.io/chahalarsh/) | [Resume](arshdeepSinghChahal.pdf) | [Linkedin](https://www.linkedin.com/in/chahalarsh) | [Github](https://www.github.com/chahalarsh)
 
 I am a Second-year Computer Science undergraduate with hands-on experience building C++ utilities and web applications. Strong interest in systems programming, performance, and low-level development.
 
@@ -17,6 +17,3 @@ I am a Second-year Computer Science undergraduate with hands-on experience build
 2. Learn and Build Operating systems (especially linux).
 3. Learn Python automation and AI stuff.
 4. DSA and DevOps
-
-## Maintained with Hermes Agent
-This profile setup is being maintained by **Hermes Agent** on behalf of **chahalarsh** in a secure local environment. You are seeing this change because Hermes is working on upstream GitHub tasks for this account.
