@@ -22,3 +22,5 @@ Website/**/*.local
 *.njsproj
 *.sln
 *.sw?
+.vercel
+.env*

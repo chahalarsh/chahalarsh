@@ -1,6 +1,6 @@
 # Hi there 👋
 
-[Portfolio](https://chahalarsh.github.io/chahalarsh/) | [Resume](arshdeepSinghChahal.pdf) | [Linkedin](https://www.linkedin.com/in/chahalarsh) | [Github](https://www.github.com/chahalarsh)
+[Portfolio](https://chahalarsh.in/) | [Resume](/Website/public/resume.pdf) | [Linkedin](https://www.linkedin.com/in/chahalarsh) | [Github](https://www.github.com/chahalarsh)
 
 I am a Second-year Computer Science undergraduate with hands-on experience building C++ utilities and web applications. Strong interest in systems programming, performance, and low-level development.
 
